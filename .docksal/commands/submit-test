@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+## Test site installation
+##
+## Usage: fin test
+
+# Abort if anything fails
+set -e
+
+# Console colors
+red='\033[0;31m'
+green='\033[0;32m'
+green_bg='\033[1;97;42m'
+yellow='\033[1;33m'
+NC='\033[0m'
+
+echo-red () { echo -e "${red}$1${NC}"; }
+echo-green () { echo -e "${green}$1${NC}"; }
+echo-green-bg () { echo -e "${green_bg}$1${NC}"; }
+echo-yellow () { echo -e "${yellow}$1${NC}"; }
+
+# Debug mode switch
+if [[ "${DEBUG}" != "" ]]; then
+    set -x
+fi
+
+echo "Testing home page..."
+curl -sL -I http://${VIRTUAL_HOST} | grep "HTTP/1.1 200 OK"
+echo "Testing login page..."
+curl -sL -I http://${VIRTUAL_HOST}/user/login | grep "HTTP/1.1 200 OK"
+
+
+# Create Config sync site
+create_config_directory ()
+{
+	echo-green "Creating Config Sync Directory..."
+	mkdir -p "${DOCROOT}/../config/sync"
+}
+
+# Export configuration to config sync directory
+export_config ()
+{
+	echo-green "Exporting configs..."
+	cd "$DOCROOT_PATH"
+  fin drush cex
+}
+
+# Compress config directory, custom theme and modules
+preparing_tar () {
+  echo-green "Preparing tar file for submitting"
+  tar -zcf "${DOCROOT}/../webfirst-test.tar.gz" "${DOCROOT}/../config/sync" "${DOCROOT}/../composer.json" "${DOCROOT}/modules" "${DOCROOT}/themes"
+}
+
+#-------------------------- Execution --------------------------------
+
+# Project initialization steps
+time -p create_config_directory
+time -p export_config
+time -p preparing_tar
+#-------------------------- END: Execution --------------------------------
+
