@@ -53,7 +53,7 @@ Follow [Docksal environment setup instructions](https://docs.docksal.io/getting-
     fin submit-test
    ```
 
-    **webfirst-test.tar.gz** file will be generated in your root directory.
+    **webfirst-test.tar.gz** file will be generated in your project root directory.
 
 
 7. Send that (**webfirst-test.tar.gz**) directory via email to **_Ryan Lawson (rlawson@webfirst.com)_**
