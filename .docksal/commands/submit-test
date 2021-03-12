@@ -34,7 +34,7 @@ curl -sL -I http://${VIRTUAL_HOST}/user/login | grep "HTTP/1.1 200 OK"
 create_config_directory ()
 {
 	echo-green "Creating Config Sync Directory..."
-	mkdir -p "${DOCROOT}/../config/sync"
+	mkdir -p "${PROJECT_ROOT}/config/sync"
 }
 
 # Export configuration to config sync directory
@@ -47,8 +47,19 @@ export_config ()
 
 # Compress config directory, custom theme and modules
 preparing_tar () {
-  echo-green "Preparing tar file for submitting"
-  tar -zcf "${DOCROOT}/../webfirst-test.tar.gz" "${DOCROOT}/../config/sync" "${DOCROOT}/../composer.json" "${DOCROOT}/modules" "${DOCROOT}/themes"
+  echo-green "Starting tar file preparation process......"
+  echo-green "Making completed_code directory..."
+  mkdir  "${PROJECT_ROOT}/completed_code"
+  echo-green "Copying config directory..."
+  rsync -a "${PROJECT_ROOT}/config" "${PROJECT_ROOT}/completed_code"
+  echo-green "Copying modules directory..."
+  rsync -a "${PROJECT_ROOT}/web/modules" "${PROJECT_ROOT}/completed_code"
+  echo-green "Copying themes directory..."
+  rsync -a "${PROJECT_ROOT}/web/themes" "${PROJECT_ROOT}/completed_code"
+  echo-green "Copying composer.json file ..."
+  rsync -a "${PROJECT_ROOT}/composer.json" "${PROJECT_ROOT}/completed_code"
+  echo-green "Preparing tar file of completed_code direcory that included config/sync, web/modules, web/themes and composor.json ..."
+  tar -zcf "${PROJECT_ROOT}/webfirst-test.tar.gz" -C "${PROJECT_ROOT}/completed_code" .
 }
 
 #-------------------------- Execution --------------------------------
