@@ -15,7 +15,7 @@ Follow [Docksal environment setup instructions](https://docs.docksal.io/getting-
 1. Clone this repo into your Projects directory
 
     ```
-    git clone https://github.com/WebFirstInc/webfirst-test.git
+    git clone https://github.com/WebFirstInc/drupaltest.git
     ```
 
 2. Go to your root directory
